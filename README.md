@@ -173,3 +173,38 @@ Welcome to follow our other interesting works:
   year={2025}
 }
 ```
+
+
+## Spring Profiles
+
+### Built-in profiles
+| Profile | Purpose | Active By |
+|---------|---------|-----------|
+| `dev` | Local development | IDE / `SPRING_PROFILES_ACTIVE=dev` |
+| `test` | Unit/integration tests | JUnit auto-activates |
+| `staging` | Pre-production verification | K8s namespace |
+| `prod` | Live production | Default |
+
+### Profile-specific config
+```
+src/main/resources/
+├── application.yaml          # shared defaults
+├── application-dev.yaml       # dev overrides (SQLite, verbose logging)
+├── application-test.yaml      # test overrides (H2, disabled async)
+├── application-staging.yaml   # staging overrides
+└── application-prod.yaml      # prod overrides (Postgres, WARN logging)
+```
+
+### Profile in code
+```java
+@Profile("dev")
+@Component
+public class DevDataSeeder implements DataSeeder {
+    // Loads demo data on startup
+}
+```
+
+### Activate
+```bash
+java -jar LAM.jar --spring.profiles.active=staging
+```
